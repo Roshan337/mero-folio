@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "164459067401",
+    "project_id": "merofolio-f6310",
+    "storage_bucket": "merofolio-f6310.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:164459067401:android:361e1173dcdc92271520d8",
+        "android_client_info": {
+          "package_name": "com.example.image"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "164459067401-vj1c7snr04ffpijinpcp9j868s82k0cs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1PUCv0EtxNhqrBSEwzqZt1NkoYsDb5Cg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "164459067401-vj1c7snr04ffpijinpcp9j868s82k0cs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
