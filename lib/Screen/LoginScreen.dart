@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:image/FirebaseHelper/firebaseHelper.dart';
+import 'package:image/Screen/HomeScreen.dart';
 import 'package:image/Screen/SignUpScreen.dart';
 
 class LoginPage extends StatefulWidget {
@@ -67,7 +69,44 @@ class _LoginPageState extends State<LoginPage> {
                 width: double.infinity,
                 height: 40,
                 child: ElevatedButton(
-                  onPressed: () async {},
+                  onPressed: () async {
+                    final message = await FirebaseHelper.instance.login(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    );
+                    if (_emailController.text.isEmpty ||
+                        _passwordController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.green,
+                          behavior: SnackBarBehavior.floating,
+                          margin: EdgeInsets.all(5),
+                          content: Text(
+                            'Email And Password is Required!',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      );
+                    } else {
+                      if (message.contains('Success')) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => HomePage(),
+                          ),
+                        );
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.green,
+                          behavior: SnackBarBehavior.floating,
+                          margin: EdgeInsets.all(5),
+                          content: Text(message),
+                        ),
+                      );
+                    }
+                  },
                   child: Text('Login'),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromARGB(255, 9, 112, 190)),

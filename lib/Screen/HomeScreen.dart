@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image/Screen/Calculator.dart';
+import 'package:image/Screen/LoginScreen.dart';
 import 'package:image/Screen/Protfolio.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,7 +20,6 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Color.fromARGB(255, 3, 131, 205),
         centerTitle: true,
       ),
-      drawer: Drawer(),
       body: Column(
         children: [
           Row(
@@ -112,6 +113,79 @@ class _HomePageState extends State<HomePage> {
             ],
           )
         ],
+      ),
+      drawer: Drawer(
+        width: 280,
+        child: ListView(
+          children: [
+            UserAccountsDrawerHeader(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color.fromARGB(255, 9, 81, 175), // Start color
+                      Color(0xFF80d0c7), // End color
+                    ],
+                  ),
+                ),
+                currentAccountPicture: CircleAvatar(
+                    backgroundColor: Colors.red,
+                    child: Center(
+                        child: Icon(Icons.person_add_alt_sharp, size: 30))),
+                accountName: Text(
+                  'Roshan Shrestha',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                accountEmail: Text(
+                  'roshan@gmail.com',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                  ),
+                )),
+            ListTile(
+              leading: Icon(Icons.edit),
+              title: Text('Edit Profile'),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Divider(thickness: 1),
+            ),
+            ListTile(
+              leading: Icon(Icons.key),
+              title: Text('Change Password'),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Divider(thickness: 1),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Setting'),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Divider(thickness: 1),
+            ),
+            ListTile(
+              onTap: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    (route) => false);
+              },
+              leading: Icon(Icons.logout),
+              title: Text('Logout'),
+            ),
+            SizedBox(height: 20),
+            Center(child: Text('Version 1.0'))
+          ],
+        ),
       ),
     );
   }
