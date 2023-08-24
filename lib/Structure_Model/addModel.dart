@@ -1,4 +1,5 @@
 class AddModel {
+  String? id;
   String? name;
   String? symbol;
   double? quantity;
@@ -9,6 +10,7 @@ class AddModel {
   double? closingPrice;
 
   AddModel({
+    this.id,
     this.name,
     this.symbol,
     this.quantity,
@@ -19,6 +21,7 @@ class AddModel {
     this.closingPrice,
   });
   factory AddModel.fromMap(Map<String, dynamic> json) => AddModel(
+        id: json["id"],
         name: json["name"],
         symbol: json["symbol"],
         quantity: json["quantity"],
@@ -30,6 +33,7 @@ class AddModel {
       );
 
   Map<String, dynamic> toMap() => {
+        'id': id,
         "name": name,
         "symbol": symbol,
         "quantity": quantity,

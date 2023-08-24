@@ -296,7 +296,7 @@ class _AddDataState extends State<AddData> {
                             height: 50,
                             width: 390,
                             child: ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   double amountandquantity =
                                       double.parse(_price.text) *
                                           double.parse(_quantity.text);
@@ -330,7 +330,16 @@ class _AddDataState extends State<AddData> {
                                         previousClosing: previousclosing,
                                         type: typeShare,
                                         closingPrice: closingprice);
-                                    shareData.addprotfolio(data);
+                                    // shareData.addprotfolio(name);
+                                    await shareData.addprotfolio(
+                                        data.name!,
+                                        data.symbol!,
+                                        data.quantity!,
+                                        data.price!,
+                                        data.totalAmount!,
+                                        data.previousClosing!,
+                                        data.type!,
+                                        data.closingPrice!);
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
                                       backgroundColor: Colors.green,
@@ -392,7 +401,16 @@ class _AddDataState extends State<AddData> {
                                         previousClosing: previousclosing,
                                         type: typeShare,
                                         closingPrice: closingprice);
-                                    shareData.addprotfolio(data);
+                                    // shareData.addprotfolio(data);
+                                    await shareData.addprotfolio(
+                                        data.name!,
+                                        data.symbol!,
+                                        data.quantity!,
+                                        data.price!,
+                                        data.totalAmount!,
+                                        data.previousClosing!,
+                                        data.type!,
+                                        data.closingPrice!);
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
                                       backgroundColor: Colors.green,
@@ -406,10 +424,9 @@ class _AddDataState extends State<AddData> {
                                       ),
                                     ));
                                   }
-                                  Navigator.pushAndRemoveUntil(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return Portfolio();
-                                  }), (route) => false);
+                                  // Navigator.pushAndRemoveUntil(context,
+                                  //     MaterialPageRoute(builder: (context) {
+                                  //   return Portfolio();
                                 },
                                 child: Text('Add'))),
                       )

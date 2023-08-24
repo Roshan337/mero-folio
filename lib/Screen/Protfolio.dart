@@ -16,6 +16,21 @@ class Portfolio extends StatefulWidget {
 }
 
 class _PortfolioState extends State<Portfolio> {
+  bool isLoading = false;
+  void getData() async {
+    isLoading = true;
+
+    final shareData = Provider.of<ShareProvider>(context, listen: false);
+    await shareData.allPortfolio();
+    isLoading = false;
+  }
+
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final shareData = Provider.of<ShareProvider>(context, listen: true);
@@ -45,237 +60,244 @@ class _PortfolioState extends State<Portfolio> {
           title: Text('My Portfolio'),
           centerTitle: true,
         ),
-        body: shareData.protfolioData.isEmpty
-            ? Center(child: Text('No Transactions'))
-            : Column(
-                children: [
-                  SizedBox(
-                    height: 80,
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Card(
-                        elevation: 11,
+        body: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : shareData.protfolioData.isEmpty
+                ? Center(child: Text('No Transactions'))
+                : Column(
+                    children: [
+                      SizedBox(
+                        height: 80,
+                        width: double.infinity,
                         child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Total Current Share Value'),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Card(
+                            elevation: 11,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Text('Total Current Share Value'),
                                   Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text('Rs.'),
-                                      Text(
-                                        alltotalPriceofPrice.toString(),
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600),
-                                      )
-                                    ],
-                                  ),
-                                  Row(children: [
-                                    Icon(
-                                      Icons.arrow_circle_right,
-                                      size: 18,
-                                      color: Colors.grey,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text(
-                                      'Rs ${difference}',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: difference >= 0
-                                            ? Colors.green
-                                            : Colors.red,
+                                      Row(
+                                        children: [
+                                          Text('Rs.'),
+                                          Text(
+                                            alltotalPriceofPrice.toString(),
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600),
+                                          )
+                                        ],
                                       ),
-                                    )
-                                  ])
+                                      Row(children: [
+                                        Icon(
+                                          Icons.arrow_circle_right,
+                                          size: 18,
+                                          color: Colors.grey,
+                                        ),
+                                        SizedBox(width: 5),
+                                        Text(
+                                          'Rs ${difference.toStringAsFixed(2)}',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: difference >= 0
+                                                ? Colors.green
+                                                : Colors.red,
+                                          ),
+                                        )
+                                      ])
+                                    ],
+                                  )
                                 ],
-                              )
-                            ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                        itemCount: shareData.protfolioData.length,
-                        itemBuilder: (context, index) {
-                          AddModel addModel = shareData.protfolioData[index];
-                          double Previoustotal =
-                              addModel.quantity! * addModel.previousClosing!;
-                          double Totalclosingprice =
-                              addModel.quantity! * addModel.closingPrice!;
-                          double totalCalcultion =
-                              Totalclosingprice - Previoustotal;
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Card(
-                              elevation: 8,
-                              child: ExpansionTile(
-                                iconColor: Colors.black,
-                                collapsedIconColor: Colors.black,
-                                title: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 10),
-                                  child: Row(
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                      Expanded(
+                        child: ListView.builder(
+                            itemCount: shareData.protfolioData.length,
+                            itemBuilder: (context, index) {
+                              AddModel addModel =
+                                  shareData.protfolioData[index];
+                              double Previoustotal = addModel.quantity! *
+                                  addModel.previousClosing!;
+                              double Totalclosingprice =
+                                  addModel.quantity! * addModel.closingPrice!;
+                              double totalCalcultion =
+                                  Totalclosingprice - Previoustotal;
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: Card(
+                                  elevation: 8,
+                                  child: ExpansionTile(
+                                    iconColor: Colors.black,
+                                    collapsedIconColor: Colors.black,
+                                    title: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      child: Row(
                                         children: [
-                                          Text(
-                                            addModel.symbol.toString(),
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                addModel.symbol.toString(),
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              SizedBox(height: 5),
+                                              Text(
+                                                "${addModel.quantity} Shares, LTP:${addModel.closingPrice}",
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.grey),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(height: 5),
-                                          Text(
-                                            "${addModel.quantity} Shares, LTP:${addModel.closingPrice}",
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.grey),
+                                          Spacer(),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                "Rs ${Totalclosingprice.toStringAsFixed(2)}",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16.0,
+                                                    color: Colors.black),
+                                              ),
+                                              Row(children: [
+                                                Icon(
+                                                  Icons.arrow_circle_right,
+                                                  size: 18,
+                                                  color: Colors.grey,
+                                                ),
+                                                SizedBox(width: 5),
+                                                Text(
+                                                  'Rs ${totalCalcultion.toStringAsFixed(2)}',
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: totalCalcultion >= 0
+                                                        ? Colors.green
+                                                        : Colors.red,
+                                                  ),
+                                                )
+                                              ]),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                      Spacer(),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "Rs ${Totalclosingprice.toStringAsFixed(2)}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16.0,
-                                                color: Colors.black),
-                                          ),
-                                          Row(children: [
-                                            Icon(
-                                              Icons.arrow_circle_right,
-                                              size: 18,
-                                              color: Colors.grey,
-                                            ),
-                                            SizedBox(width: 5),
+                                    ),
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 15, right: 15, bottom: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Scrip"),
+                                            Text(addModel.symbol.toString())
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 15, right: 15, bottom: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Current Balance"),
+                                            Text(addModel.quantity.toString())
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 15, right: 15, bottom: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Total Purchase Price"),
+                                            Text(addModel.totalAmount!
+                                                .toStringAsFixed(2))
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 15, right: 15, bottom: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Previous Closing Price"),
+                                            Text(addModel.previousClosing
+                                                .toString())
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 15, right: 15, bottom: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
                                             Text(
-                                              'Rs ${totalCalcultion.toString()}',
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                color: totalCalcultion >= 0
-                                                    ? Colors.green
-                                                    : Colors.red,
-                                              ),
-                                            )
-                                          ]),
-                                        ],
+                                                "Value As Of Previous Closing Price"),
+                                            Text(Previoustotal.toStringAsFixed(
+                                                2))
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 15, right: 15, bottom: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text("Last Transaction Price"),
+                                            Text(addModel.closingPrice
+                                                .toString())
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 15, right: 15, bottom: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                                "Value As Of Last Transaction Price"),
+                                            Text(Totalclosingprice
+                                                .toStringAsFixed(2))
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 15, right: 15, bottom: 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("Scrip"),
-                                        Text(addModel.symbol.toString())
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 15, right: 15, bottom: 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("Current Balance"),
-                                        Text(addModel.quantity.toString())
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 15, right: 15, bottom: 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("Total Purchase Price"),
-                                        Text(addModel.totalAmount!
-                                            .toStringAsFixed(2))
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 15, right: 15, bottom: 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("Previous Closing Price"),
-                                        Text(
-                                            addModel.previousClosing.toString())
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 15, right: 15, bottom: 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                            "Value As Of Previous Closing Price"),
-                                        Text(Previoustotal.toStringAsFixed(2))
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 15, right: 15, bottom: 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("Last Transaction Price"),
-                                        Text(addModel.closingPrice.toString())
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 15, right: 15, bottom: 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                            "Value As Of Last Transaction Price"),
-                                        Text(Totalclosingprice.toStringAsFixed(
-                                            2))
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }),
-                  ),
-                ],
-              ));
+                              );
+                            }),
+                      ),
+                    ],
+                  ));
   }
 }

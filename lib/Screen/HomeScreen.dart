@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image/Provider.dart';
 import 'package:image/Screen/Calculator.dart';
 import 'package:image/Screen/LoginScreen.dart';
 import 'package:image/Screen/Protfolio.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -141,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 accountEmail: Text(
-                  'roshan@gmail.com',
+                  FirebaseAuth.instance.currentUser!.email.toString(),
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w400,
