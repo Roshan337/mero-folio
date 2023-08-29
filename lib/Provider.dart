@@ -34,4 +34,14 @@ class ShareProvider with ChangeNotifier {
     _addprotfolio.add(share);
     notifyListeners();
   }
+
+  Future<void> DeleteShare(AddModel addModel) async {
+    String data = await FirebaseHelperShare.instance.deleteItem(addModel.id!);
+    if (data == 'Delete Successfully') {
+      _addprotfolio.remove(addModel);
+      print('delete');
+    }
+    notifyListeners();
+    notifyListeners();
+  }
 }

@@ -46,7 +46,6 @@ class _PortfolioState extends State<Portfolio> {
               shareData.protfolioData[i].quantity! -
           shareData.protfolioData[i].previousClosing! *
               shareData.protfolioData[i].quantity!;
-      ;
     }
     return Scaffold(
         floatingActionButton: FloatingActionButton(
@@ -288,6 +287,25 @@ class _PortfolioState extends State<Portfolio> {
                                                 "Value As Of Last Transaction Price"),
                                             Text(Totalclosingprice
                                                 .toStringAsFixed(2))
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 15, right: 15, bottom: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                shareData.DeleteShare(addModel);
+                                              },
+                                              child: Icon(
+                                                Icons.delete,
+                                                color: Colors.red,
+                                              ),
+                                            )
                                           ],
                                         ),
                                       ),

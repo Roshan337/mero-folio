@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:image/Structure_Model/addModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -46,6 +47,20 @@ class FirebaseHelperShare {
       return data;
     } catch (e) {
       throw Exception('Error In Order Fetch');
+    }
+  }
+
+  Future<String> deleteItem(String id) async {
+    try {
+      FirebaseFirestore.instance
+          .collection('allshare')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('myshare')
+        ..doc(id).delete();
+      return 'Delete Successfully';
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
     }
   }
 }
